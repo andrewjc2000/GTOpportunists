@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+    <html>
+        <head>
+
+            <title>
+                Platformer
+            </title>
+
+            <link rel="stylesheet" type="text/css" href="main.css" />
+        </head>
+        <body>
+
+            <div id="ground">
+            </div>
+
+            <div id="guy">
+            </div>
+
+            <script src="jQuery.js">
+            </script>
+            <script src="mechanics.js">
+            </script>
+            <script type="text/javascript">
+                Barriers.addBarrier(20, 70, 40, 90);
+                for (var i = 0;i < Barriers.list.length; i++){
+                    var b = Barriers.list[i];
+                    var attrStr = 'width:' + (b[2] - b[0]) + '%;height:' + (b[3] - b[1]) + '%';
+                    attrStr += ';left:' + b[0] + '%;top:' + b[1] + '%;';
+                    $('body').append("<div id='barrier' style='" + attrStr + "'></div>");   
+                }
+                window.addEventListener("keydown", Game.handleKeyPress);
+                window.addEventListener("keyup", Game.handleKeyUp);
+                window.setInterval(
+                    function(){
+                        Player.updatePosition();
+                        Game.updatePositions();
+                    }, 10
+                );
+            </script>
+        </body>
+    </html>

@@ -1,0 +1,28 @@
+
+body {
+	background-color: #8888FF;
+}
+
+#ground {
+	position: absolute;
+	height: 10%;
+	width: 100%;
+	top: 90%;
+	left: 0px;
+	background-color: green;
+}
+
+#guy {
+	position: absolute;
+	height: 10%;
+	width: 5%;
+	top: 80%;
+	left: 0%;
+	background:url("guy.png") no-repeat;
+	background-size: cover;
+}
+
+#barrier {
+	position: absolute;
+	background-color: yellow;
+}
