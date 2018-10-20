@@ -82,12 +82,12 @@ var Player = {
 						Player.jumpProgress++;
 						var h = Player.upwardsAmount;
 						var p = Player.jumpProgress;
-						Player.y = Player.baseY - ((-h/2500) * (p * p) + (h/25) * p);
+						Player.y = Player.baseY - ((-h/2500) * (p * p) + (h/25) * p) + 7;
 					} 
 					else {
 						Player.jumping = false;
 						Player.jumpProgress = 0;
-						Player.y = Player.baseY;
+						Player.y = Player.baseY + 7;
 					}
 				}
 				if(Player.movingLeft) {
@@ -128,15 +128,15 @@ var Player = {
 				else {
 					Player.jumping = false;
 					Player.jumpProgress = 0;
-					Player.y = platform[1] - Player.playerHeight;
+					Player.y = platform[1] - Player.playerHeight + 1;
 					Player.onBarrier = true;
 					Player.baseY = Player.y;
 				}
 			}
 			if(Player.movingLeft) {
 				if(Player.x > 0) {
-					var testX = Player.x;
-					var testY = Player.y + Player.playerHeight;
+					var testX = Player.x + 1;
+					var testY = Player.y + Player.playerHeight + 1;
 					if (!Barriers.insideBarrier(testX, testY)) {
 						Player.x -= Player.sidewaysAmount;
 					} 
