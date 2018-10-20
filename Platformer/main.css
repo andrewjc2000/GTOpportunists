@@ -26,5 +26,5 @@ body {
 
 #barrier {
 	position: absolute;
-	background-color: yellow;
+	background: url("bigPumpkin.gif") no-repeat;
 }
