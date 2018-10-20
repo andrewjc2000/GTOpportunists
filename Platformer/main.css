@@ -1,6 +1,8 @@
 
 body {
-	background-color: #8888FF;
+	background-image: url("background.png");
+	background-repeat: no-repeat;
+	background-size: cover;
 }
 
 #ground {
@@ -9,20 +11,20 @@ body {
 	width: 100%;
 	top: 90%;
 	left: 0px;
-	background-color: green;
+	background-image: url("floor.png");
 }
 
 #guy {
 	position: absolute;
-	height: 10%;
-	width: 5%;
+	height: 17%;
+	width: 7%;
 	top: 80%;
 	left: 0%;
-	background:url("guy.png") no-repeat;
+	background:url("sp00kyb0iFINAL.png") no-repeat;
 	background-size: cover;
 }
 
 #barrier {
 	position: absolute;
-	background-color: yellow;
+	background: url("bigPumpkin.gif") no-repeat;
 }
