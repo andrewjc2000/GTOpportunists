@@ -50,13 +50,13 @@ var Game = {
 
 var Player = {
 	playerWidth: 5,
-	playerHeight: 10,
+	playerHeight: 17,
 	sidewaysAmount: .3,
-	upwardsAmount: 30,
+	upwardsAmount: 37,
 	movingLeft: false,
 	movingRight: false,
 	jumping: false,
-	jumpHeight: 20,
+	jumpHeight: 32,
 	jumpProgress: 0,
 	onBarrier: false,
 	baseY: 80,
@@ -147,8 +147,8 @@ var Player = {
 			}
 			if(Player.movingRight) {
 				if(Player.x < 100 - Player.playerWidth) {
-					var testX = Player.x + Player.playerWidth;
-					var testY = Player.y + Player.playerHeight;
+					var testX = Player.x + Player.playerWidth + 1;
+					var testY = Player.y + Player.playerHeight + 1;
 					if (!Barriers.insideBarrier(testX, testY)) {
 						Player.x += Player.sidewaysAmount;
 					} 
@@ -171,7 +171,7 @@ var Barriers = {
 	insideBarrier: function(x, y){
 		for(var i = 0;i < Barriers.list.length; i++){
 			var b = Barriers.list[i];
-			if(x >= b[0] && x <= b[2] && y >= b[1] && y <= b[3]){
+			if(x >= (b[0]) && x <= (b[2]) && y >= (b[1]) && y <= (b[3])){
 				return b;
 			}
 		}
