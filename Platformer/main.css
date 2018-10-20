@@ -1,6 +1,8 @@
 
 body {
-	background-color: #8888FF;
+	background-image: url("background.png");
+	background-repeat: no-repeat;
+	background-size: cover;
 }
 
 #ground {
@@ -9,7 +11,7 @@ body {
 	width: 100%;
 	top: 90%;
 	left: 0px;
-	background-color: green;
+	background-image: url("floor.png");
 }
 
 #guy {
