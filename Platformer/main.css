@@ -1,6 +1,6 @@
 
 body {
-	background-image: url("background.png");
+	background-image: url("Resources/background.png");
 	background-repeat: no-repeat;
 	background-size: cover;
 }
@@ -11,20 +11,32 @@ body {
 	width: 100%;
 	top: 90%;
 	left: 0px;
-	background-image: url("floor.png");
+	background-image: url("Resources/floor.png");
 }
 
 #guy {
 	position: absolute;
-	height: 10%;
-	width: 5%;
-	top: 80%;
+	top: 85%;
 	left: 0%;
-	background:url("sp00kyb0iFINAL.png") no-repeat;
-	background-size: cover;
+	height: 15%;
+	width: 3%;
+}
+
+#guy img {
+	width: 100%;
+	height: 100%;
 }
 
 #barrier {
 	position: absolute;
-	background: url("bigPumpkin.gif") no-repeat;
+	height: 2%;
+	background-color: green;
+	/*background: url("Resources/bigPumpkin.gif") no-repeat;*/
+}
+
+#box {
+	position: absolute;
+	background-color: red;
+	height: 5px;
+	width: 5px;
 }

@@ -14,6 +14,11 @@
             </div>
 
             <div id="guy">
+                <img src="Resources/mistaSkelly.gif">
+                </img>
+            </div>
+
+            <div id="box">
             </div>
 
             <script src="jQuery.js">
@@ -21,14 +26,15 @@
             <script src="mechanics.js">
             </script>
             <script type="text/javascript">
-                Barriers.addBarrier(20, 70, 40, 90);
+                Barriers.addBarrier(20, 40, 70);
+                Barriers.addBarrier(45, 55, 60);
                 for (var i = 0;i < Barriers.list.length; i++){
                     var b = Barriers.list[i];
-                    var attrStr = 'width:' + (b[2] - b[0]) + '%;height:' + (b[3] - b[1]) + '%';
-                    attrStr += ';left:' + b[0] + '%;top:' + b[1] + '%;';
+                    var attrStr = 'width:' + (b[1] - b[0]) + "%";
+                    attrStr += ';left:' + b[0] + '%;top:' + b[2] + '%;';
                     $('body').append("<div id='barrier' style='" + attrStr + "'></div>");   
                 }
-                window.addEventListener("keydown", Game.handleKeyPress);
+                window.addEventListener("keypress", Game.handleKeyPress);
                 window.addEventListener("keyup", Game.handleKeyUp);
                 window.setInterval(
                     function(){
