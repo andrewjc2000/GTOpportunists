@@ -5,6 +5,11 @@ var Game = {
 	baseX: 0,
 	keys: ["w", "a", "d"],
 	init: function(){
+		Barriers.addBarrier(110, 200, 70, 1);
+        Barriers.addBarrier(45, 70, 60, 3);
+        Image.createEnemy("crowFlappy.gif", 60, 70, 20, 20, 5, 5);
+        Image.createEnemy("spiderTinySideways.gif", 60, 50, 5, 5, 5, 5);
+        
 		for (var i = 0;i < Player.health; i++){
 			var iString = "<img src='Resources/heart.gif' style='width:100%;height:100%;' />";
 			$("<div id='heart" + i + "' class='heart' style='left:" + (i * 4) +  "%' >" + iString + "</div>").appendTo("body");
@@ -23,6 +28,17 @@ var Game = {
 				Image.createBarrier(src, top, left, w, 5);
 			}
 		}
+
+		$(window).bind("keydown", Game.handleKeyPress);
+        $(window).bind("keyup", Game.handleKeyUp);
+        window.setInterval(
+            function(){
+                if (Game.running){
+                    Player.updatePosition();
+                    Game.update();
+                }
+            }, 10
+        );
 	},
 	handleKeyPress: function(keyEvent){
 		//up 38, down 40
@@ -124,6 +140,8 @@ var Game = {
 		Game.running = false;
 		$(window).unbind("keydown", Game.handleKeyPress);
         $(window).unbind("keyup", Game.handleKeyUp);
+        $("<div id='gameOver'> <img src='Resources/gameOver.png' style='width:100%;height:100%;'/></div>").appendTo( "body" );
+        $(".image").css("display", "none");
 	}
 };
 

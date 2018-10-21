@@ -60,3 +60,11 @@ body {
 	width: 3%;
 	height: 4%;
 }
+
+#gameOver {
+	position: absolute;
+	top: 5%;
+	left: 10%;
+	height: 80%;
+	width: 80%;
+}

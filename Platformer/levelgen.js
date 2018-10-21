@@ -44,7 +44,9 @@ var Gen = {
                         if ((Math.floor(Math.random() * 4) === 0)) { // 25% chance of generating an enemy
 
                         }
-                    } // if we don't have space, we're done
+                    } else { // if we don't have space, we're done
+                        gen = false;
+                    }
                 } else { // no generation = push forward some
                     xOffset += 20;
                 }
