@@ -56,7 +56,7 @@ var Game = {
 				} else if (Player.gunState === PState.GUN_DOWNWARDS) {
 					direction += 4;
 				}
-				console.log(direction);
+				//console.log(direction);
 				//straight, down , up (4, 5, 6)
 				// 0 1
 				// 2 3
@@ -111,6 +111,7 @@ var Game = {
 			$("#img" + i).css("left", img[1] - Game.baseX + "%");
 		}
 
+		Image.updateEnemies();
 		Image.updateBullets();
 	}
 };
@@ -312,7 +313,9 @@ var Barriers = {
 var Image = {
 	barrierList: [],
 	bulletList: [],
+	enemyList: [],
 	bulletCount: 0,
+	enemyCount: 0,
 	createBarrier: function(source, top, left, width, height){
 		var data = [top, left, width, height];
 		Image.barrierList.push(data);
@@ -329,12 +332,63 @@ var Image = {
 		$("<div id='bullet" + Image.bulletCount + "'class='image' style='" + sString + "' >" + iString + "</div>").appendTo( "body" );
 		Image.bulletCount++;
 	},
+	createEnemy: function(source, x, y, width, height, health, maxHealth){
+		var data = [x, y, width, height, health, maxHealth, Image.enemyCount, true, 0];
+					//x, y, width, height, currentHealth, maxHealth, id number, currently alive, deadAnim progress
+		Image.enemyList.push(data);
+		var sString = "position:absolute;top:" + y + "%;left:" + x + "%;height:" + height + "%;width:" + width + "%;";
+		var iString = "<img src='Resources/" + source + "' style='width:100%;height:100%;' />";
+		$("<div id='enemy" + Image.enemyCount + "'class='image' style='" + sString + "' >" + iString + "</div>").appendTo( "body" );
+		Image.enemyCount++;
+	},
+	updateEnemies: function(){
+		var bulletsToRemove = [];
+		var enemiesToRemove = [];
+		for(var i = 0;i < Image.enemyList.length; i++) {
+			var enemy = Image.enemyList[i];
+			if (enemy[7]) {
+				for (var j = 0;j < Image.bulletList.length; j++) {
+					var bullet = Image.bulletList[j];
+					if (bullet[0] >= enemy[0] && bullet[0] <= enemy[0] + enemy[2] 
+						&& bullet[1] >= enemy[1] && bullet[1] <= enemy[1] + enemy[3]
+						){
+						Image.enemyList[i][4]--;
+						$("#bullet" + bullet[4]).remove();
+						bulletsToRemove.push(j);
+						if (Image.enemyList[i][4] <= 0) {
+							Image.enemyList[i][7] = false;
+						}
+					}
+				}
+			}
+			else {
+				if (enemy[8] < 50) {
+					Image.enemyList[i][8]++;
+					if (enemy[8] % 20 === 0){
+						$("#enemy" + Image.enemyList[i][6]).css("opacity", "1.0");
+					} else if (enemy[8] % 10 === 0) {
+						$("#enemy" + Image.enemyList[i][6]).css("opacity", "0.0");
+					}
+				} else {
+					$("#enemy" + Image.enemyList[i][6]).remove();
+					enemiesToRemove.push(i);
+				}
+			}
+		}
+		for(var i = 0; i < bulletsToRemove.length; i++) {
+			Image.bulletList.splice(bulletsToRemove[i] - i, 1);
+		}
+
+		for(var i = 0; i < enemiesToRemove.length; i++) {
+			Image.enemyList.splice(enemiesToRemove[i] - i, 1);
+		}
+	},
 	updateBullets: function(){
 		var indecesToRemove = [];
 		for(var i = 0;i < Image.bulletList.length; i++){
 			var bullet = Image.bulletList[i];
 			var maxX = (Game.baseX === 0) ? 100 : Player.x + 50;
-			console.log(bullet[1]);
+			//console.log(bullet[1]);
 			if(bullet[0] < Game.baseX || bullet[0] > maxX || bullet[1] < 0 || bullet[1] > 94) {
 				$("#bullet" + bullet[4]).remove();
 				indecesToRemove.push(i);
