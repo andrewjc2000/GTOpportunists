@@ -8,17 +8,15 @@
 
             <link rel="stylesheet" type="text/css" href="main.css" />
         </head>
-        <body>
+        <body onload="Game.init();">
 
-            <div id="ground">
+            <div id="ground" class="noSelect">
+                <img src="Resources/floor.png" />
             </div>
 
-            <div id="guy">
-                <img src="Resources/mistaSkelly.gif">
+            <div id="guy" class="noSelect">
+                <img src="Resources/standing.PNG" class="no-select">
                 </img>
-            </div>
-
-            <div id="box">
             </div>
 
             <script src="jQuery.js">
@@ -26,20 +24,16 @@
             <script src="mechanics.js">
             </script>
             <script type="text/javascript">
-                Barriers.addBarrier(20, 40, 70);
-                Barriers.addBarrier(45, 55, 60);
-                for (var i = 0;i < Barriers.list.length; i++){
-                    var b = Barriers.list[i];
-                    var attrStr = 'width:' + (b[1] - b[0]) + "%";
-                    attrStr += ';left:' + b[0] + '%;top:' + b[2] + '%;';
-                    $('body').append("<div id='barrier' style='" + attrStr + "'></div>");   
-                }
-                window.addEventListener("keypress", Game.handleKeyPress);
+                //document.addEventListener('contextmenu', event => event.preventDefault());
+                Barriers.addBarrier(10, 102, 70, 1);
+                Barriers.addBarrier(45, 70, 60, 2);
+                Game.init();
+                window.addEventListener("keydown", Game.handleKeyPress);
                 window.addEventListener("keyup", Game.handleKeyUp);
                 window.setInterval(
                     function(){
                         Player.updatePosition();
-                        Game.updatePositions();
+                        Game.updateStyles();
                     }, 10
                 );
             </script>
