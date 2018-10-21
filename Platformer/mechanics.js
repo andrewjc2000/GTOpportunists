@@ -2,7 +2,7 @@
 var Game = {
 	theme: 2,
 	running: true,
-	levelLimit: 300,
+	levelLimit: 1500,
 	baseX: 0,
 	keys: ["w", "a", "d"],
 	changeTheme: function(theme){
@@ -296,6 +296,7 @@ var Player = {
 		for (var i = 0;i < Image.candyList.length; i++) {
 			var candy = Image.candyList[i];
 			if (testX >= candy[0] && testX <= candy[0] + 3 && testY >= candy[1] && testY <= candy[1] + 4) {
+				//alert('candy');
 				Image.collectCandy(i);
 			}
 		}
@@ -483,8 +484,8 @@ var Image = {
 	},
 	collectCandy: function(index) {
 		Player.candyAmount++;
+		$("#candy" + Image.candyList[index][2]).remove();
 		Image.candyList.splice(index, 1);
-		$("#candy" + index).remove();
 	},
 	createBarrier: function(source, top, left, width, height){
 		var data = [top, left, width, height];

@@ -16,22 +16,22 @@ var Gen = {
                     var random = Math.random();
                     if (random >= .9) {
                         var isCrow = Math.random() >= .5;
-                        var h = isCrow ? 30 : 20;
+                        var h = isCrow ? 5 : 4;
                         Image.createEnemy(isCrow ? "crowFlappy.gif" : "spider.gif", x + randomWidth / 2, y - 15, 15, 15, h, h);
                         var isTinyJump = Math.random() >= .5;
-                        Image.createEnemy(isTinyJump ? "spiderTinyJump.gif" : "spiderTinySideways.gif", x + randomWidth / 5, y - 5, 8, 5, h, h);
-                        Image.createEnemy(isTinyJump ? "spiderTinySideways.gif" : "spiderTinyJump.gif", x + 4 * randomWidth / 5, y - 8, 8, 5, h, h);
+                        Image.createEnemy(isTinyJump ? "spiderTinyJump.gif" : "spiderTinySideways.gif", x + randomWidth / 5, y - 5, 8, 5, 2, 2);
+                        Image.createEnemy(isTinyJump ? "spiderTinySideways.gif" : "spiderTinyJump.gif", x + 4 * randomWidth / 5, y - 8, 8, 5, 2, 2);
                     } else if (random >= .7){
                         var isCrow = Math.random() >= .5;
-                        var h = isCrow ? 30 : 20;
+                        var h = isCrow ? 5 : 4;
                         Image.createEnemy(isCrow ? "crowFlappy.gif" : "spider.gif", x + randomWidth / 2, y - 15, 15, 15, h, h);
                         var isTinyJump = Math.random() >= .5;
                         var num = Math.random() >= .5 ? 4 : 1;
-                        Image.createEnemy(isTinyJump ? "spiderTinyJump.gif" : "spiderTinySideways.gif", x + num * randomWidth / 5, y - 5, 8, 5, h, h);
+                        Image.createEnemy(isTinyJump ? "spiderTinyJump.gif" : "spiderTinySideways.gif", x + num * randomWidth / 5, y - 5, 8, 5, 2, 2);
                     } else if (random >= .5) {
                         var isTinyJump = Math.random() >= .5;
                         var num = Math.random() >= .5 ? 4 : 1;
-                        Image.createEnemy(isTinyJump ? "spiderTinyJump.gif" : "spiderTinySideways.gif", x + num * randomWidth / 5, y - 5, 8, 5, h, h);
+                        Image.createEnemy(isTinyJump ? "spiderTinyJump.gif" : "spiderTinySideways.gif", x + num * randomWidth / 5, y - 5, 8, 5, 2, 2);
                     }
 
                     for (var i = 0;i < 10; i++) {
