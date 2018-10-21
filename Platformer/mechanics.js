@@ -1,16 +1,57 @@
 'use strict';
 var Game = {
+	theme: 2,
 	running: true,
-	levelLimit: 500,
+	levelLimit: 300,
 	baseX: 0,
 	keys: ["w", "a", "d"],
+	changeTheme: function(theme){
+		Game.theme = theme;
+		$("#background img").attr("src", "Resources/background" + theme + ".png");
+	},
+	click: function(button) {
+		if (button <= 4) {
+			var names = ["play", "controls", "themes", "credits", "back"];
+			$("#" + names[button] + " img").attr("src", "Resources/" + names[button] + "Selected.PNG");
+		} 
+	},
+	releaseClick: function (button) {
+		if (button <= 3){
+			var names = ["play", "controls", "themes", "credits", "back"];
+			$("#" + names[button] + " img").attr("src", "Resources/" + names[button] + ".PNG");
+			$("#buttons").css("display", "none");
+			if (button === 0) {
+				Game.init();
+			} else if (button === 1){
+				$("#controlInfo").css("display", "block");
+				$("#back").css("display", "block");
+			} else if (button === 2){
+				$("#theme1").css("display", "block");
+				$("#theme2").css("display", "block");
+				$("#theme3").css("display", "block");
+				$("#back").css("display", "block");
+			} else if (button === 3){
+				$("#back").css("display", "block");
+			}
+		} else if (button === 4) {
+			$("#buttons").css("display", "block");
+			$("#theme1").css("display", "none");
+			$("#theme2").css("display", "none");
+			$("#theme3").css("display", "none");
+			$("#controlInfo").css("display", "none");
+			$("#back img").attr("src", "Resources/back.PNG");
+			$("#back").css("display", "none");
+		}
+	},
 	init: function(){
-		$("<div id='ground' class='noSelect'> <img src='Resources/floor.png'/> </div>").appendTo("body");
+		$("<div id='ground' class='noSelect'> <img src='Resources/floor" + Game.theme + ".png'/> </div>").appendTo("body");
 		$("<div id='guy' class='noSelect'> <img src='Resources/standing.PNG'/> </div>").appendTo("body");
-		Barriers.addBarrier(110, 200, 70, 1);
+		/*Barriers.addBarrier(110, 200, 70, 1);
         Barriers.addBarrier(45, 70, 60, 3);
         Image.createEnemy("crowFlappy.gif", 60, 70, 20, 20, 5, 5);
         Image.createEnemy("spiderTinySideways.gif", 60, 50, 5, 5, 5, 5);
+		*/
+		Gen.init();
 		for (var i = 0;i < Player.health; i++){
 			var iString = "<img src='Resources/heart.gif' style='width:100%;height:100%;' />";
 			$("<div id='heart" + i + "' class='heart' style='left:" + (i * 4) +  "%' >" + iString + "</div>").appendTo("body");
@@ -21,7 +62,7 @@ var Game = {
 			var rounded = Math.round(width) + Math.round(width) % 5;
 			var w = width / (rounded / 5);
 			for (var j = 0; j < rounded / 5; j++){
-				var names = ["grass", "fall", "graveyard"];
+				var names = ["graveyard", "fall", "grass"];
 				var left = b[0] + j * w;
 				//console.log(left);
 				var top = b[2];
@@ -65,7 +106,7 @@ var Game = {
 			}
 
 		} else if (keyEvent.keyCode === 32) {
-			if (Player.gunState !== PState.UNARMED){
+			if (Player.gunState !== PState.UNARMED && !Player.reloading){
 				var facingLeft = $("#guy img").css("transform") !== "none";
 				var x = facingLeft ? Player.x - 2 : Player.x + Player.playerWidth;
 				var y = Player.y + Player.playerHeight / 2;
@@ -83,6 +124,7 @@ var Game = {
 				// 0 1
 				// 2 3
 				// 4 5
+				Player.reloading = true;
 				Image.createBullet(x, y, 1.5, direction);
 			}
 		} else if (keyEvent.keyCode === 38) {
@@ -132,7 +174,25 @@ var Game = {
 			//if (img[])
 			$("#img" + i).css("left", img[1] - Game.baseX + "%");
 		}
+		for (var i = 0;i < Image.candyList.length; i++) {
+			var img = Image.candyList[i];
+			$("#candy" + i).css("left", img[0] - Game.baseX + "%");
+		}
 
+		if (Player.reloading) {
+			if (Player.reloadingProgress < 30) {
+				Player.reloadingProgress++;
+			} else {
+				Player.reloadingProgress = 0;
+				Player.reloading = false;
+			}
+		}
+
+		if (Player.x >= Game.levelLimit - Player.playerWidth - 1) {
+			Game.win();
+		}
+
+		Player.getCandies();
 		Player.checkDamage();
 		Image.updateEnemies();
 		Image.updateBullets();
@@ -142,6 +202,13 @@ var Game = {
 		$(window).unbind("keydown", Game.handleKeyPress);
         $(window).unbind("keyup", Game.handleKeyUp);
         $("<div id='gameOver'> <img src='Resources/gameOver.png' style='width:100%;height:100%;'/></div>").appendTo( "body" );
+        $(".image").css("display", "none");
+	},
+	win: function () {
+		Game.running = false;
+		$(window).unbind("keydown", Game.handleKeyPress);
+        $(window).unbind("keyup", Game.handleKeyUp);
+        $("<div id='win'> <img src='Resources/win.png' style='width:100%;height:100%;'/></div>").appendTo( "body" );
         $(".image").css("display", "none");
 	}
 };
@@ -183,7 +250,10 @@ var Player = {
 	health: 5,
 	maxHealth: 5,
 	damageProgress: 0,
+	reloadingProgress: 0,
+	reloading: false,
 	takingDamage: false,
+	candyAmount: 0,
 	checkDamage: function (){
 		var x1 = Player.x;
 		var y1 = Player.y;
@@ -217,6 +287,16 @@ var Player = {
 				$("#guy").css("opacity", "1.0");
 			} else if (Player.damageProgress % 20 === 0){
 				$("#guy").css("opacity", "0.5");
+			}
+		}
+	},
+	getCandies: function () {
+		var testX = Player.x + Player.playerWidth / 2;
+		var testY = Player.y + Player.playerHeight;
+		for (var i = 0;i < Image.candyList.length; i++) {
+			var candy = Image.candyList[i];
+			if (testX >= candy[0] && testX <= candy[0] + 3 && testY >= candy[1] && testY <= candy[1] + 4) {
+				Image.collectCandy(i);
 			}
 		}
 	},
@@ -389,8 +469,23 @@ var Image = {
 	barrierList: [],
 	bulletList: [],
 	enemyList: [],
+	candyList: [],
 	bulletCount: 0,
 	enemyCount: 0,
+	candyCount: 0,
+	createCandy: function(source, x, y){
+		var data = [x, y, Image.candyCount];
+		Image.candyList.push(data);
+		var sString = "position:absolute;top:" + y + "%;left:" + x + "%;height:1.5%;width:3%;";
+		var iString = "<img src='Resources/" + source + "' style='width:100%;height:100%;' />";
+		$("<div id='candy" + Image.candyCount + "' class='image' style='" + sString + "' >" + iString + "</div>").appendTo( "body" );
+		Image.candyCount++;
+	},
+	collectCandy: function(index) {
+		Player.candyAmount++;
+		Image.candyList.splice(index, 1);
+		$("#candy" + index).remove();
+	},
 	createBarrier: function(source, top, left, width, height){
 		var data = [top, left, width, height];
 		Image.barrierList.push(data);

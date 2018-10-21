@@ -1,3 +1,8 @@
+* {
+	padding: 0px;
+	margin: 0px;
+}
+
 img {
 	-webkit-touch-callout: none;
     -webkit-user-select: none;
@@ -8,12 +13,145 @@ img {
 	cursor:context-menu;
 }
 
-
 body {
-	background-image: url("Resources/background.png");
 	background-repeat: no-repeat;
 	background-size: cover;
 	overflow-x: hidden;
+}
+
+@font-face {
+    font-family: sp00kyFont;
+    src: url("Resources/SUPERSCR.TTF");
+}
+
+#candyCount {
+	font-family: sp00kyFont;
+}
+
+#background {
+	position: fixed;
+	top:0px;
+	left:0px;
+	height: 100%;
+	width:100%;
+}
+
+#background img {
+	width: 100%;
+	height: 100%;
+}
+
+#title {
+	position: fixed;
+	top: 2%;
+	left: 15%;
+	height: 60%;
+	width: 70%;
+}
+
+#play {
+	position: fixed;
+	top: 61%;
+	left: 35%;
+	height: 20%;
+	width: 30%;
+}
+
+#play img:hover {
+	cursor: pointer;
+}
+
+#controls {
+	position: fixed;
+	top: 80%;
+	left: 5%;
+	height: 15%;
+	width: 25%;
+}
+
+#controls img:hover {
+	cursor: pointer;
+}
+
+#themes {
+	position: fixed;
+	top: 81%;
+	left: 37.5%;
+	height: 15%;
+	width: 25%;
+}
+
+#themes img:hover {
+	cursor: pointer;
+}
+
+#theme1 {
+	position: fixed;
+	top: 20%;
+	left: 37.5%;
+	height: 15%;
+	width: 25%;
+}
+
+#theme1 img:hover {
+	cursor: pointer;
+}
+
+#theme2 {
+	position: fixed;
+	top: 40%;
+	left: 37.5%;
+	height: 15%;
+	width: 25%;
+}
+
+#theme2 img:hover {
+	cursor: pointer;
+}
+
+#theme3 {
+	position: fixed;
+	top: 60%;
+	left: 37.5%;
+	height: 15%;
+	width: 25%;
+}
+
+#theme3 img:hover {
+	cursor: pointer;
+}
+
+#back {
+	position: fixed;
+	top: 75%;
+	left: 42.5%;
+	width: 15%;
+	height: 15%;
+}
+
+#back img:hover {
+	cursor: pointer;
+}
+
+#credits {
+	position: fixed;
+	top: 81%;
+	right: 5%;
+	height: 15%;
+	width: 25%;
+}
+
+#credits img:hover {
+	cursor: pointer;
+}
+
+#controlInfo {
+	position: fixed;
+	left: 20%;
+	top: 25%;
+	height: 50%;
+	width: 60%;
+
 }
 
 #ground {
@@ -61,7 +199,7 @@ body {
 	height: 4%;
 }
 
-#gameOver {
+#gameOver, #win {
 	position: absolute;
 	top: 5%;
 	left: 10%;

@@ -3,16 +3,64 @@
         <head>
 
             <title>
-                Platformer
+                Mr. Skelly Sp000ktober
             </title>
-
+            <link rel="icon" type="png" href="Resources/icon.ico"/>
             <link rel="stylesheet" type="text/css" href="main.css" />
         </head>
-        <body onload="Game.init();">
+        <body>
+
+            <div id="background">
+                <img src="Resources/background2.png" />
+            </div>
+
+            <div id="buttons">
+                <div id="title">
+                    <img src="Resources/title.PNG" style="width:100%;height:100%" />
+                </div>
+
+                <div id="play" onmousedown="Game.click(0)" onmouseup="Game.releaseClick(0)">
+                    <img src="Resources/play.PNG" style="width:100%;height:100%" />
+                </div>
+
+                <div id="controls" onmousedown="Game.click(1)" onmouseup="Game.releaseClick(1)">
+                    <img src="Resources/controls.PNG" style="width:100%;height:100%" />
+                </div>
+
+                <div id="themes" onmousedown="Game.click(2)" onmouseup="Game.releaseClick(2)">
+                    <img src="Resources/themes.PNG" style="width:100%;height:100%" />
+                </div>
+
+                <div id="credits" onmousedown="Game.click(3)" onmouseup="Game.releaseClick(3)">
+                    <img src="Resources/credits.PNG" style="width:100%;height:100%" />
+                </div>
+            </div>
+
+            <div id="controlInfo" style="display:none;">
+                <img src="Resources/controlInfo.PNG" style="width:100%;height:100%" />
+            </div>
+
+            <div id="theme1" style="display:none;" onclick="Game.changeTheme(1)">
+                <img src="Resources/dark.PNG" style="width:100%;height:100%" />
+            </div>
+
+            <div id="theme2" style="display:none;" onclick="Game.changeTheme(2)">
+                <img src="Resources/fall.PNG" style="width:100%;height:100%" />
+            </div>
+
+            <div id="theme3" style="display:none;" onclick="Game.changeTheme(3)">
+                <img src="Resources/happy.PNG" style="width:100%;height:100%" />
+            </div>
+
+            <div id="back" style="display:none;" onmousedown="Game.click(4)" onmouseup="Game.releaseClick(4)">
+                <img src="Resources/back.PNG" style="width:100%;height:100%" />
+            </div>
 
             <script src="jQuery.js">
             </script>
             <script src="mechanics.js">
+            </script>
+            <script src="levelgen.js">
             </script>
         </body>
     </html>

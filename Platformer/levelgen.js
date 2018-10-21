@@ -1,56 +1,49 @@
 'use strict';
 var Gen = {
     init: function() {
+
         var xOffset = 40;
         var minWidth = 15;
         var maxWidth = 95;
-        var gen = true;
-        var curRow = 1;
+        var randomWidth = minWidth - 10;
 
-        var gameLength = 500;
-
-        var width = 0;
-
-        while(gen) {
-            if (curRow === 0) {
-                if (!(Math.floor(Math.random() * 4) === 0)) { // 75% chance of generating a barrier
-
-                }
-            } else if (curRow === 1) { // between 65 and 70
-                if (!(Math.floor(Math.random() * 4) === 0)) { // 75% chance of generating a barrier
-                    width = (Math.floor(Math.random() * (maxWidth - minWidth + 1)) + minWidth);
-                    if (xOffset + width <= gameLength) { // if we have space to generate another barrier
-                        Barriers.addBarrier(xOffset, xOffset + width, Math.floor(Math.random() * 6) + 65, Math.floor(Math.random() * 3) + 1);
-                        xOffset += (width + 10);
-
-                        if (!(Math.floor(Math.random() * 2) === 0)) { // 50% chance of generating an enemy
-
-                        }
-                    } else { // if we don't have space, reset for next row
-                        curRow = 2;
-                        xOffset = 40;
-                        maxWidth = 75; // upper rows are shorter
+        for (var y = 10;y <= 85; y += 25) {
+            var probability = Math.sqrt(y) / Math.sqrt(250);
+            for (var x = xOffset;x < Game.levelLimit - 30; x++) {
+                if (Math.random() < probability) {
+                    randomWidth = minWidth + Math.floor(Math.random() * (maxWidth - minWidth));
+                    Barriers.addBarrier(x, x + randomWidth, y, Game.theme);
+                    var random = Math.random();
+                    if (random >= .9) {
+                        var isCrow = Math.random() >= .5;
+                        var h = isCrow ? 30 : 20;
+                        Image.createEnemy(isCrow ? "crowFlappy.gif" : "spider.gif", x + randomWidth / 2, y - 15, 15, 15, h, h);
+                        var isTinyJump = Math.random() >= .5;
+                        Image.createEnemy(isTinyJump ? "spiderTinyJump.gif" : "spiderTinySideways.gif", x + randomWidth / 5, y - 5, 8, 5, h, h);
+                        Image.createEnemy(isTinyJump ? "spiderTinySideways.gif" : "spiderTinyJump.gif", x + 4 * randomWidth / 5, y - 8, 8, 5, h, h);
+                    } else if (random >= .7){
+                        var isCrow = Math.random() >= .5;
+                        var h = isCrow ? 30 : 20;
+                        Image.createEnemy(isCrow ? "crowFlappy.gif" : "spider.gif", x + randomWidth / 2, y - 15, 15, 15, h, h);
+                        var isTinyJump = Math.random() >= .5;
+                        var num = Math.random() >= .5 ? 4 : 1;
+                        Image.createEnemy(isTinyJump ? "spiderTinyJump.gif" : "spiderTinySideways.gif", x + num * randomWidth / 5, y - 5, 8, 5, h, h);
+                    } else if (random >= .5) {
+                        var isTinyJump = Math.random() >= .5;
+                        var num = Math.random() >= .5 ? 4 : 1;
+                        Image.createEnemy(isTinyJump ? "spiderTinyJump.gif" : "spiderTinySideways.gif", x + num * randomWidth / 5, y - 5, 8, 5, h, h);
                     }
-                } else { // no generation = push forward some
-                    xOffset += 20;
-                }
-            } else if (curRow === 2) { // between 55 and 60
-                if ((Math.floor(Math.random() * 4) === 0)) { // 25% chance of generating a barrier
-                    width = (Math.floor(Math.random() * (maxWidth - minWidth + 1)) + minWidth);
-                    if (xOffset + width <= gameLength) { // if we have space to generate another barrier
-                        Barriers.addBarrier(xOffset, xOffset + width, Math.floor(Math.random() * 6) + 55, Math.floor(Math.random() * 3) + 1);
-                        xOffset += (width + 10);
 
-                        if ((Math.floor(Math.random() * 4) === 0)) { // 25% chance of generating an enemy
-
+                    for (var i = 0;i < 10; i++) {
+                        if (Math.random() > .8) {
+                            var src = "candy" + (1 + Math.floor(Math.random() * 3)) + ".PNG";
+                            Image.createCandy(src, x + i * randomWidth / 10, y - 2);
                         }
-                    } else { // if we don't have space, we're done
-                        gen = false;
                     }
-                } else { // no generation = push forward some
-                    xOffset += 20;
                 }
+                x += randomWidth + 10;
             }
         }
+
     }
 }
