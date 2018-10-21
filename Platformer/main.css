@@ -52,6 +52,11 @@ body {
 #box {
 	position: absolute;
 	background-color: red;
-	height: 5px;
-	width: 5px;
+}
+
+.heart {
+	position: absolute;
+	top: 0px;
+	width: 3%;
+	height: 4%;
 }

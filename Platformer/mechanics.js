@@ -5,6 +5,10 @@ var Game = {
 	baseX: 0,
 	keys: ["w", "a", "d"],
 	init: function(){
+		for (var i = 0;i < Player.health; i++){
+			var iString = "<img src='Resources/heart.gif' style='width:100%;height:100%;' />";
+			$("<div id='heart" + i + "' class='heart' style='left:" + (i * 4) +  "%' >" + iString + "</div>").appendTo("body");
+		}
 		for(var i = 0;i < Barriers.list.length; i++){
 			var b = Barriers.list[i];
 			var width = b[1] - b[0];
@@ -22,6 +26,7 @@ var Game = {
 	},
 	handleKeyPress: function(keyEvent){
 		//up 38, down 40
+		console.log('yeet');
 		if(Game.keys.indexOf(keyEvent.key) !== -1){
 			var dir = Game.keys.indexOf(keyEvent.key);
 			if(dir === 0){
@@ -111,8 +116,14 @@ var Game = {
 			$("#img" + i).css("left", img[1] - Game.baseX + "%");
 		}
 
+		Player.checkDamage();
 		Image.updateEnemies();
 		Image.updateBullets();
+	},
+	gameOver: function () {
+		Game.running = false;
+		$(window).unbind("keydown", Game.handleKeyPress);
+        $(window).unbind("keyup", Game.handleKeyUp);
 	}
 };
 
@@ -150,6 +161,51 @@ var Player = {
 	baseY: 75,
 	x: 0,
 	y: 75,
+	health: 5,
+	maxHealth: 5,
+	damageProgress: 0,
+	takingDamage: false,
+	checkDamage: function (){
+		var x1 = Player.x;
+		var y1 = Player.y;
+		var x2 = Player.x + Player.playerWidth;
+		var y2 = Player.y + Player.playerHeight;
+		if (!Player.takingDamage){
+			for (var i = 0;i < Image.enemyList.length; i++){
+				//var data = [x, y, width, height, health, maxHealth, Image.enemyCount, true, 0];
+				var enemy = Image.enemyList[i];
+				if (
+					((x1 >= enemy[0] && y1 >= enemy[1] && x1 <= enemy[0] + enemy[2] && y1 <= enemy[1] + enemy[3]) || 
+					(x2 >= enemy[0] && y2 >= enemy[1] && x2 <= enemy[0] + enemy[2] && y2 <= enemy[1] + enemy[3]))
+					&& enemy[7]
+				) {
+					Player.takingDamage = true;
+					Player.damageProgress = 0;
+					Player.health--;
+					Player.updateHearts();
+					if (Player.health <= 0) {
+						Game.gameOver();
+					}
+				}
+			}
+		} else {
+			Player.damageProgress++;
+			if (Player.damageProgress >= 200){
+				$("#guy").css("opacity", "1.0");
+				Player.takingDamage = false;
+				Player.damageProgress = 0;
+			} else if (Player.damageProgress % 40 === 0) {
+				$("#guy").css("opacity", "1.0");
+			} else if (Player.damageProgress % 20 === 0){
+				$("#guy").css("opacity", "0.5");
+			}
+		}
+	},
+	updateHearts: function () {
+		for (var i = Player.maxHealth - 1;i >= Player.health; i--){
+			$("#heart" + i + " img").attr("src", "Resources/deadHeart.PNG");
+		}
+	},
 	updateImage: function () {
 		if (Player.movementState === PState.STILL && Player.movingLeft) {
 			Player.changeState(PState.MOVING_LEFT, Player.gunState);
@@ -327,25 +383,46 @@ var Image = {
 	createBullet: function(x, y, speed, dir) {
 		var data = [x, y, speed, dir, Image.bulletCount];
 		Image.bulletList.push(data);
-		var sString = "position:absolute;top:" + y + "%;left:" + x + "%;height:2%;width:2%;";
+		var sString = "position:absolute;top:" + y + "%;left:" + (x - Game.baseX) + "%;height:2%;width:2%;";
 		var iString = "<img src='Resources/bullet.PNG' style='width:100%;height:100%;' />";
 		$("<div id='bullet" + Image.bulletCount + "'class='image' style='" + sString + "' >" + iString + "</div>").appendTo( "body" );
 		Image.bulletCount++;
 	},
 	createEnemy: function(source, x, y, width, height, health, maxHealth){
-		var data = [x, y, width, height, health, maxHealth, Image.enemyCount, true, 0];
-					//x, y, width, height, currentHealth, maxHealth, id number, currently alive, deadAnim progress
+
+		//Current Enemies:
+		//Crow
+		//Tiny Spider
+		//Spider
+
+		var name;
+
+		if (source === "crowFlappy.gif") {
+			name = "crow";
+		} else if (source === "spiderTinyJump.gif" || source === "spiderTinySideways.gif") {
+			name = "tiny_spider";
+		} else if (source === "spider.gif"){
+			name = "spider";
+		} else {
+			name = "none";
+		}
+
+		var data = [x, y, width, height, health, maxHealth, Image.enemyCount, true, 0, name];
+					//x, y, width, height, currentHealth, maxHealth, id number, currently alive, deadAnim progress, name
 		Image.enemyList.push(data);
 		var sString = "position:absolute;top:" + y + "%;left:" + x + "%;height:" + height + "%;width:" + width + "%;";
 		var iString = "<img src='Resources/" + source + "' style='width:100%;height:100%;' />";
 		$("<div id='enemy" + Image.enemyCount + "'class='image' style='" + sString + "' >" + iString + "</div>").appendTo( "body" );
 		Image.enemyCount++;
 	},
+	enemiesWithDeadAnims: ["crow", "tiny_spider", "spider"],
+	deadAnims: ["deadCrow.PNG", "deadTinySpider.PNG", "deadSpider.PNG"],
 	updateEnemies: function(){
 		var bulletsToRemove = [];
 		var enemiesToRemove = [];
 		for(var i = 0;i < Image.enemyList.length; i++) {
 			var enemy = Image.enemyList[i];
+			$("#enemy" + enemy[6]).css("left", enemy[0] - Game.baseX + "%");
 			if (enemy[7]) {
 				for (var j = 0;j < Image.bulletList.length; j++) {
 					var bullet = Image.bulletList[j];
@@ -367,9 +444,18 @@ var Image = {
 					if (enemy[8] % 20 === 0){
 						$("#enemy" + Image.enemyList[i][6]).css("opacity", "1.0");
 					} else if (enemy[8] % 10 === 0) {
-						$("#enemy" + Image.enemyList[i][6]).css("opacity", "0.0");
+						$("#enemy" + Image.enemyList[i][6]).css("opacity", "0.5");
 					}
-				} else {
+				} else if (Image.enemiesWithDeadAnims.indexOf(enemy[9]) !== -1 && enemy[8] < 200) {
+					Image.enemyList[i][8]++;
+					if(enemy[8] === 100) {
+						var source = "Resources/" + Image.deadAnims[Image.enemiesWithDeadAnims.indexOf(enemy[9])];
+						$("#enemy" + Image.enemyList[i][6] + " img").attr("src", source);
+					} else if (enemy[8] === 150) {
+						$("#enemy" + Image.enemyList[i][6] + " img").css("transform", "rotate(180deg)");
+					}
+				}
+				else {
 					$("#enemy" + Image.enemyList[i][6]).remove();
 					enemiesToRemove.push(i);
 				}
