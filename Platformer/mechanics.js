@@ -16,7 +16,7 @@ var Game = {
 				//console.log(left);
 				var top = b[2];
 				var src = names[b[3] - 1] + "" + (j % 3 + 1) + ".png";
-				Util.createImage(src, top, left, w, 5);
+				Image.createBarrier(src, top, left, w, 5);
 			}
 		}
 	},
@@ -43,7 +43,26 @@ var Game = {
 			}
 
 		} else if (keyEvent.keyCode === 32) {
-			Player.jumping = true;
+			if (Player.gunState !== PState.UNARMED){
+				var facingLeft = $("#guy img").css("transform") !== "none";
+				var x = facingLeft ? Player.x - 2 : Player.x + Player.playerWidth;
+				var y = Player.y + Player.playerHeight / 2;
+				var direction = 1;
+				if (facingLeft) {
+					direction--;
+				}
+				if (Player.gunState === PState.GUN_STRAIGHT) {
+					direction += 2;
+				} else if (Player.gunState === PState.GUN_DOWNWARDS) {
+					direction += 4;
+				}
+				console.log(direction);
+				//straight, down , up (4, 5, 6)
+				// 0 1
+				// 2 3
+				// 4 5
+				Image.createBullet(x, y, 1.5, direction);
+			}
 		} else if (keyEvent.keyCode === 38) {
 			if(Player.gunState !== PState.UNARMED) {
 				if (Player.gunState === PState.GUN_DOWNWARDS) {
@@ -77,7 +96,7 @@ var Game = {
 
 		}
 	},
-	updateStyles: function () {
+	update: function () {
 		//Player.sidewaysAmount
 		//top, left, width, height
 		if(Player.x > 50 && Player.x < Game.levelLimit - 50){
@@ -86,11 +105,13 @@ var Game = {
 		$("#guy").css("top", Player.y + "%");
 		$("#guy").css("left", Player.x - Game.baseX + "%");
 		Player.updateImage();
-		for (var i = 0;i < Util.imageList.length; i++) {
-			var img = Util.imageList[i];
+		for (var i = 0;i < Image.barrierList.length; i++) {
+			var img = Image.barrierList[i];
 			//if (img[])
 			$("#img" + i).css("left", img[1] - Game.baseX + "%");
-		} 
+		}
+
+		Image.updateBullets();
 	}
 };
 
@@ -288,14 +309,63 @@ var Barriers = {
 	}
 };
 
-var Util = {
-	imageList: [],
-	createImage: function(source, top, left, width, height){
+var Image = {
+	barrierList: [],
+	bulletList: [],
+	bulletCount: 0,
+	createBarrier: function(source, top, left, width, height){
 		var data = [top, left, width, height];
-		Util.imageList.push(data);
+		Image.barrierList.push(data);
 		var sString = "position:absolute;top:" + top + "%;left:" + left + "%;height:" + height + "%;width:" + width + "%;";
 		var iString = "<img src='Resources/" + source + "' style='width:100%;height:100%;' />";
-		$("<div id='img" + (Util.imageList.length - 1) + "'class='image' style='" + sString + "' >" + iString + "</div>").appendTo( "body" );
-		return Util.imageList.length - 1;
+		$("<div id='img" + (Image.barrierList.length - 1) + "'class='image' style='" + sString + "' >" + iString + "</div>").appendTo( "body" );
+		return Image.barrierList.length - 1;
+	},
+	createBullet: function(x, y, speed, dir) {
+		var data = [x, y, speed, dir, Image.bulletCount];
+		Image.bulletList.push(data);
+		var sString = "position:absolute;top:" + y + "%;left:" + x + "%;height:2%;width:2%;";
+		var iString = "<img src='Resources/bullet.PNG' style='width:100%;height:100%;' />";
+		$("<div id='bullet" + Image.bulletCount + "'class='image' style='" + sString + "' >" + iString + "</div>").appendTo( "body" );
+		Image.bulletCount++;
+	},
+	updateBullets: function(){
+		var indecesToRemove = [];
+		for(var i = 0;i < Image.bulletList.length; i++){
+			var bullet = Image.bulletList[i];
+			var maxX = (Game.baseX === 0) ? 100 : Player.x + 50;
+			console.log(bullet[1]);
+			if(bullet[0] < Game.baseX || bullet[0] > maxX || bullet[1] < 0 || bullet[1] > 94) {
+				$("#bullet" + bullet[4]).remove();
+				indecesToRemove.push(i);
+			} else {
+				var speed = bullet[2];
+				var direction = bullet[3];
+				Image.bulletList[i][0] +=  (direction % 2 === 0) ? -speed : speed;
+				if (direction < 2) {
+					Image.bulletList[i][1] += -speed;
+				} else if (direction > 3) {
+					Image.bulletList[i][1] += speed;
+				} 
+				$("#bullet" + bullet[4]).css("left", Image.bulletList[i][0] - Game.baseX + "%");
+				$("#bullet" + bullet[4]).css("top", Image.bulletList[i][1] + "%");
+			}
+		}
+		for(var i = 0; i < indecesToRemove.length; i++) {
+			Image.bulletList.splice(indecesToRemove[i] - i, 1);
+		}
 	}
 };
+
+/*var Bullets = {
+	bulletList: [],
+	fireBullet: function(x, y, speed, dir) {
+		// directions:
+		//  0   1
+		//  2 O 3
+		//  4   5
+
+		var arr = [x, y, speed, dir, imageIndex];
+		Bullets.bulletList.push(arr);
+	}
+};*/
