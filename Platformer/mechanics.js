@@ -44,6 +44,8 @@ var Game = {
 		}
 	},
 	init: function(){
+		$("#candyCount").css("display", "block");
+		$("#candyIcon").css("display", "block");
 		$("<div id='ground' class='noSelect'> <img src='Resources/floor" + Game.theme + ".png'/> </div>").appendTo("body");
 		$("<div id='guy' class='noSelect'> <img src='Resources/standing.PNG'/> </div>").appendTo("body");
 		/*Barriers.addBarrier(110, 200, 70, 1);
@@ -296,7 +298,6 @@ var Player = {
 		for (var i = 0;i < Image.candyList.length; i++) {
 			var candy = Image.candyList[i];
 			if (testX >= candy[0] && testX <= candy[0] + 3 && testY >= candy[1] && testY <= candy[1] + 4) {
-				//alert('candy');
 				Image.collectCandy(i);
 			}
 		}
@@ -484,6 +485,7 @@ var Image = {
 	},
 	collectCandy: function(index) {
 		Player.candyAmount++;
+		$("#candyCount").html("" + Player.candyAmount);
 		$("#candy" + Image.candyList[index][2]).remove();
 		Image.candyList.splice(index, 1);
 	},
