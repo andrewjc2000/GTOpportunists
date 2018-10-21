@@ -5,11 +5,12 @@ var Game = {
 	baseX: 0,
 	keys: ["w", "a", "d"],
 	init: function(){
+		$("<div id='ground' class='noSelect'> <img src='Resources/floor.png'/> </div>").appendTo("body");
+		$("<div id='guy' class='noSelect'> <img src='Resources/standing.PNG'/> </div>").appendTo("body");
 		Barriers.addBarrier(110, 200, 70, 1);
         Barriers.addBarrier(45, 70, 60, 3);
         Image.createEnemy("crowFlappy.gif", 60, 70, 20, 20, 5, 5);
         Image.createEnemy("spiderTinySideways.gif", 60, 50, 5, 5, 5, 5);
-        
 		for (var i = 0;i < Player.health; i++){
 			var iString = "<img src='Resources/heart.gif' style='width:100%;height:100%;' />";
 			$("<div id='heart" + i + "' class='heart' style='left:" + (i * 4) +  "%' >" + iString + "</div>").appendTo("body");
